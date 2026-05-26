@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ theBitWitch ✨</title>
+
+  <!-- Fonts (lokal) -->
+  <link rel="stylesheet" href="assets/fonts/google-fonts.css" />
+
+  <!-- Icons (lokal) -->
+  <link rel="stylesheet" href="assets/fontawesome/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+  <!-- Floating sparkles (injected by JS) -->
+  <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
+  <!-- ── Theme Toggle ──────────────────────────────────────────────── -->
+  <button class="theme-btn" id="theme-btn" aria-label="Darkmode umschalten" title="Darkmode umschalten">
+    <span class="btn-icon" id="theme-icon">🌙</span>
+  </button>
+
+  <main class="page">
+
+    <!-- ── Lost Counter ──────────────────────────────────────────────── -->
+    <div class="lost-counter" role="status" aria-live="polite">
+      <span class="lost-label">so oft war ich im Stream lost:</span>
+      <span class="lost-num" id="lost-count">…</span>
+    </div>
+
+    <!-- ── Profile ───────────────────────────────────────────────────── -->
+    <div class="profile-wrap">
+      <button class="avatar-btn" id="avatar-btn" aria-label="QR-Code anzeigen" title="QR-Code für diese Seite">
+        <div class="avatar-ring">
+          <img
+            src="assets/leo.png"
+            alt="Profilbild"
+            width="128"
+            height="128"
+          />
+        </div>
+        <span class="avatar-hint" aria-hidden="true"><i class="fa-solid fa-qrcode"></i></span>
+      </button>
+
+      <h1 class="username">theBitWitch</h1>
+      <p class="bio">streamer · content creator </p>
+
+      <!-- Quick social row -->
+      <nav class="social-row" aria-label="Social Media">
+        <a href="https://twitch.tv/thebitwitch"      class="social-icon" aria-label="Twitch" target="_blank" rel="noopener">    <i class="fa-brands fa-twitch"></i></a>
+        <a href="https://www.instagram.com/thebitwitch"       class="social-icon" aria-label="Instagram" target="_blank" rel="noopener"> <i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@thebitwitch"      class="social-icon" aria-label="TikTok" target="_blank" rel="noopener">    <i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://youtube.com/@the_bitwitch"     class="social-icon" aria-label="YouTube" target="_blank" rel="noopener">   <i class="fa-brands fa-youtube"></i></a>
+        <a href="mailto:thebitwitch@gmail.com" class="social-icon" aria-label="E-Mail">    <i class="fa-solid fa-envelope"></i></a>
+      </nav>
+    </div>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <!-- ── Links ─────────────────────────────────────────────────────── -->
+    <nav class="links-section" aria-label="Links">
+
+      <span class="section-label">🎮 streaming</span>
+
+      <a href="https://twitch.tv/thebitwitch" class="link-card" style="--accent:#9146FF" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-brands fa-twitch"></i></div>
+        <div class="link-text">
+          <div class="link-name">Twitch</div>
+          <div class="link-desc">Schau mir live beim Programmieren zu!</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <span class="section-label">📱 social media</span>
+
+      <a href="https://www.instagram.com/thebitwitch" class="link-card" style="--accent:#E1306C" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-brands fa-instagram"></i></div>
+        <div class="link-text">
+          <div class="link-name">Instagram</div>
+          <div class="link-desc">Bilder, Stories & Reels</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <a href="https://www.tiktok.com/@thebitwitch" class="link-card" style="--accent:#010101" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-brands fa-tiktok"></i></div>
+        <div class="link-text">
+          <div class="link-name">TikTok</div>
+          <div class="link-desc">Kurzvideos & Clips</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <a href="https://youtube.com/@the_bitwitch" class="link-card" style="--accent:#FF0000" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-brands fa-youtube"></i></div>
+        <div class="link-text">
+          <div class="link-name">YouTube</div>
+          <div class="link-desc">Highlights & Videos</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <span class="section-label">💬 community</span>
+
+      <a href="https://discord.gg/TRhPVS5pvb" class="link-card" style="--accent:#5865F2" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-brands fa-discord"></i></div>
+        <div class="link-text">
+          <div class="link-name">Discord</div>
+          <div class="link-desc">Join der Community!</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <span class="section-label">🌸 Kooperationen & Anderes</span>
+
+      <a href="mailto:thebitwitch@gmail.com" class="link-card" style="--accent:#E8648A" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
+        <div class="link-text">
+          <div class="link-name">Business Anfragen</div>
+          <div class="link-desc">Koops, Werbung & Kontakt</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <a href="https://throne.com/thebitwitch" class="link-card" style="--accent:#F4A261" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-solid fa-star"></i></div>
+        <div class="link-text">
+          <div class="link-name">Wishlist</div>
+          <div class="link-desc">Falls ihr nett sein wollt 🎁</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <a href="https://ko-fi.com/thebitwitch" class="link-card" style="--accent:#FF5E5B" target="_blank" rel="noopener">
+        <div class="link-icon-wrap"><i class="fa-solid fa-mug-hot"></i></div>
+        <div class="link-text">
+          <div class="link-name">Ko-fi</div>
+          <div class="link-desc">Kauf mir einen Kaffee ☕</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+      <a href="mediakit.html" class="link-card" style="--accent:#8BAD79">
+        <div class="link-icon-wrap"><i class="fa-solid fa-chart-bar"></i></div>
+        <div class="link-text">
+          <div class="link-name">Media Kit</div>
+          <div class="link-desc">Reichweite & Kennzahlen 📊</div>
+        </div>
+        <i class="fa-solid fa-chevron-right link-arrow"></i>
+      </a>
+
+    </nav>
+
+    <footer class="footer">
+      <div>made with ♥ by theBitWitch</div>
+      <div>★ ★ ★</div>
+      <nav class="legal-links" aria-label="Rechtliches">
+        <a href="impressum.html">Impressum</a>
+        <span aria-hidden="true">·</span>
+        <a href="datenschutz.html">Datenschutz</a>
+      </nav>
+    </footer>
+
+  </main>
+
+  <!-- ── QR Modal ────────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="qr-modal" role="dialog" aria-modal="true" aria-label="QR-Code">
+    <div class="modal-box">
+      <p class="modal-title">QR-CODE ✨<br>scan mich!</p>
+      <img id="qr-img" src="assets/qr.png" alt="QR-Code" width="200" height="200" style="image-rendering:pixelated;border-radius:4px" />
+      <p class="modal-url" id="qr-url-label">thebitwitch.github.io/theBitWitch</p>
+      <button class="modal-close" id="modal-close-btn">✕ schließen</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+name: Update Stats
+
+on:
+  schedule:
+    - cron: '0 8 * * *'   # 08:00 UTC = 10:00 Uhr DE (Sommerzeit)
+    - cron: '0 19 * * *'  # 19:00 UTC = 21:00 Uhr DE
+  workflow_dispatch:       # auch manuell per Knopfdruck auslösbar
+
+permissions:
+  contents: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Abhängigkeiten installieren
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Crawler ausführen
+        run: python crawl_stats.py
+        env:
+          CI: true
+
+      - name: stats.json committen (wenn geändert)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add stats.json
+          git diff --cached --quiet || git commit -m "chore: stats.json automatisch aktualisiert"
+          git push

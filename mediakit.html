@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Media Kit · theBitWitch</title>
+  <meta name="robots" content="noindex" />
+  <!-- Fonts (lokal) -->
+  <link rel="stylesheet" href="assets/fonts/google-fonts.css" />
+
+  <!-- Icons (lokal) -->
+  <link rel="stylesheet" href="assets/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ─── Media Kit–spezifische Styles ─────────────────────────────── */
+    .mk-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Back-Link */
+    .mk-back {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: 'Press Start 2P', monospace;
+      font-size: .55rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .mk-back:hover { color: var(--pink-dark); }
+
+    /* Header */
+    .mk-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .mk-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid var(--pink-dark);
+      object-fit: cover;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 0 4px var(--pink-light);
+    }
+    .mk-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.1rem;
+      color: var(--pink-dark);
+      margin-bottom: .6rem;
+    }
+    .mk-title-badge {
+      display: inline-block;
+      background: var(--pink-dark);
+      color: var(--white);
+      font-family: 'Press Start 2P', monospace;
+      font-size: .55rem;
+      padding: .4rem .8rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+    .mk-bio {
+      color: var(--text-muted);
+      font-size: .95rem;
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .mk-about {
+      color: var(--text-muted);
+      font-size: .9rem;
+      max-width: 640px;
+      margin: 1.5rem auto 2rem;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    /* Section heading */
+    .mk-section-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: .65rem;
+      color: var(--sage-medium);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .mk-section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--sage-medium), transparent);
+      border-radius: 1px;
+    }
+
+    /* Platform cards grid */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .platform-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius);
+      border: 2px solid var(--platform-color, var(--pink-medium));
+      padding: 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .platform-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .platform-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--platform-color, var(--pink-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .platform-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: .6rem;
+      color: var(--text-muted);
+    }
+    .platform-handle {
+      font-size: .8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stat-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: .2rem 0;
+      border-bottom: 1px solid rgba(128,128,128,.12);
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label {
+      font-size: .75rem;
+      color: var(--text-muted);
+    }
+    .stat-value {
+      font-family: 'Press Start 2P', monospace;
+      font-size: .75rem;
+      color: var(--text-main);
+    }
+    .stat-value.positive { color: var(--sage-medium); }
+    .stat-value.unknown  { color: var(--text-muted); opacity: .5; }
+
+    /* Total reach banner */
+    .reach-banner {
+      background: linear-gradient(135deg, var(--pink-dark), var(--sage-medium));
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #fff;
+    }
+    .reach-banner .reach-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.6rem;
+      display: block;
+      margin-bottom: .4rem;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    }
+    .reach-banner .reach-label {
+      font-size: .85rem;
+      opacity: .9;
+    }
+
+    /* Contact CTA */
+    .contact-cta {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius);
+      border: 2px solid var(--pink-medium);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .contact-cta h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: .7rem;
+      color: var(--pink-dark);
+      margin-bottom: .75rem;
+    }
+    .contact-cta p {
+      color: var(--text-muted);
+      font-size: .9rem;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--pink-dark);
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: .6rem;
+      padding: .75rem 1.25rem;
+      border-radius: 999px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .contact-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(232,100,138,0.35);
+    }
+
+    /* Last updated */
+    .mk-updated {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: .75rem;
+      color: var(--text-muted);
+    }
+    .mk-updated span {
+      font-weight: 700;
+    }
+
+    /* ─── Demographics ───────────────────────────────────────────── */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .demo-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius);
+      border: 2px solid var(--pink-medium);
+      padding: 1.25rem 1rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+    .demo-card-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: .55rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 1rem;
+    }
+    .demo-row {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      margin-bottom: .75rem;
+    }
+    .demo-row:last-child { margin-bottom: 0; }
+    .demo-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .demo-row-label {
+      font-size: .8rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .demo-row-pct {
+      font-family: 'Press Start 2P', monospace;
+      font-size: .6rem;
+      color: var(--pink-dark);
+    }
+    .demo-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: rgba(128,128,128,.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .demo-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--pink-dark), var(--sage-medium));
+      transition: width 0.6s ease;
+    }
+    /* Geschlecht: zwei Farben */
+    .demo-bar-fill.male   { background: linear-gradient(90deg, #6BA3D6, #4A7FB5); }
+    .demo-bar-fill.female { background: linear-gradient(90deg, var(--pink-dark), #c45a7e); }
+    /* Alter: abgestufte Töne */
+    .demo-bar-fill.age-1 { background: linear-gradient(90deg, var(--pink-dark), #d4567a); }
+    .demo-bar-fill.age-2 { background: linear-gradient(90deg, #c0547a, var(--sage-medium)); }
+    .demo-bar-fill.age-3 { background: linear-gradient(90deg, var(--sage-medium), #7fac62); }
+    .demo-bar-fill.age-4 { background: linear-gradient(90deg, #7fac62, #9ecb80); }
+    /* Länder: Flaggen-Emoji vor Label, Balken grün */
+    .demo-bar-fill.country { background: linear-gradient(90deg, var(--sage-medium), #9ecb80); }
+
+    .mk-footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <!-- Dark-mode restore (inline, vor dem Paint) -->
+  <script>
+    (function(){
+      try {
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+      } catch(e){}
+    })();
+  </script>
+
+  <!-- Theme Toggle -->
+  <button class="theme-btn" id="theme-btn" aria-label="Dark Mode umschalten">🌙</button>
+
+  <div class="mk-wrap">
+
+    <a href="index.html" class="mk-back">
+      <i class="fa-solid fa-chevron-left"></i> zurück
+    </a>
+
+    <!-- Header -->
+    <header class="mk-header">
+      <img class="mk-avatar" src="assets/leo.png" alt="theBitWitch Avatar" />
+      <div class="mk-name">theBitWitch</div>
+      <div class="mk-title-badge">📊 MEDIA KIT</div>
+      <p class="mk-bio">Streamerin & Content Creator · Coding, Tech & Gaming </p>
+    </header>
+
+    <!-- About -->
+    <p class="mk-about">
+      theBitWitch ist eine deutschsprachige Streamerin und Content Creatorin mit Fokus auf Tech, Coding und Gaming.
+      Die Inhalte drehen sich um Programmierung, Software-Projekte und alles rund ums digitale Basteln –
+      eingebettet in eine gewachsene Community, die Technik ernst nimmt, ohne sich zu ernst zu nehmen.
+      Der Schwerpunkt liegt auf authentischem Personal Branding: keine Masche, kein Hype,
+      sondern Einblicke in echte Projekte und den Alltag als Tech-Creatorin.
+    </p>
+
+    <!-- Stats -->
+    <div class="mk-section-title">📈 Reichweite</div>
+
+    <div class="reach-banner">
+      <span class="reach-num" id="reach-total">…</span>
+      <span class="reach-label">Gesamt-Follower über alle Plattformen</span>
+    </div>
+
+    <div class="mk-section-title" style="margin-top:2rem">🎮 Plattformen</div>
+
+    <div class="platform-grid" id="platform-grid">
+      <!-- Dynamisch befüllt via JS -->
+    </div>
+
+    <!-- Contact CTA -->
+    <div class="mk-section-title">👥 Zielgruppe</div>
+
+    <div class="demo-grid">
+
+      <!-- Geschlecht -->
+      <div class="demo-card">
+        <div class="demo-card-title">⚧ Geschlecht</div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">♂ Männlich</span>
+            <span class="demo-row-pct">60%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill male" style="width:60%"></div></div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">♀ Weiblich</span>
+            <span class="demo-row-pct">40%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill female" style="width:40%"></div></div>
+        </div>
+      </div>
+
+      <!-- Alter -->
+      <div class="demo-card">
+        <div class="demo-card-title">🎂 Altersgruppen</div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">18–24 Jahre</span>
+            <span class="demo-row-pct">18%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill age-1" style="width:18%"></div></div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">25–34 Jahre</span>
+            <span class="demo-row-pct">45%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill age-2" style="width:45%"></div></div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">35–44 Jahre</span>
+            <span class="demo-row-pct">23%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill age-3" style="width:23%"></div></div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">45+ Jahre</span>
+            <span class="demo-row-pct">14%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill age-4" style="width:14%"></div></div>
+        </div>
+      </div>
+
+      <!-- Länder -->
+      <div class="demo-card">
+        <div class="demo-card-title">🌍 Länder</div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">🇩🇪 Deutschland</span>
+            <span class="demo-row-pct">90%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill country" style="width:90%"></div></div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">🇦🇹 Österreich</span>
+            <span class="demo-row-pct">5%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill country" style="width:5%"></div></div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-row-header">
+            <span class="demo-row-label">🌐 Andere</span>
+            <span class="demo-row-pct">5%</span>
+          </div>
+          <div class="demo-bar-bg"><div class="demo-bar-fill country" style="width:5%"></div></div>
+        </div>
+      </div>
+
+    </div><!-- /.demo-grid -->
+
+    <!-- Contact CTA -->
+    <div class="mk-section-title">📩 Business</div>
+    <div class="contact-cta">
+      <h3>Kooperationen & Anfragen</h3>
+      <p>Für Kooperationen, Sponsorings und Werbeanfragen – schreib mir gerne direkt!</p>
+      <a href="mailto:thebitwitch@gmail.com" class="contact-btn">
+        <i class="fa-solid fa-envelope"></i> E-Mail schreiben
+      </a>
+    </div>
+
+    <p class="mk-updated" id="mk-updated"></p>
+
+    <footer class="mk-footer">
+      made with ♥ by theBitWitch &nbsp;·&nbsp;
+      <a href="impressum.html" style="color:var(--text-muted)">Impressum</a>
+      &nbsp;·&nbsp;
+      <a href="datenschutz.html" style="color:var(--text-muted)">Datenschutz</a>
+    </footer>
+
+  </div><!-- /.mk-wrap -->
+
+  <script>
+    // ── Theme Toggle ───────────────────────────────────────────────────────
+    (function setupTheme() {
+      const btn = document.getElementById('theme-btn');
+      const html = document.documentElement;
+      btn.textContent = html.classList.contains('dark') ? '☀️' : '🌙';
+      btn.addEventListener('click', () => {
+        html.classList.toggle('dark');
+        const isDark = html.classList.contains('dark');
+        btn.style.transform = 'rotate(180deg) scale(0.8)';
+        setTimeout(() => { btn.style.transform = ''; }, 300);
+        btn.textContent = isDark ? '☀️' : '🌙';
+        try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e){}
+      });
+    })();
+
+    // ── Hilfsfunktionen ────────────────────────────────────────────────────
+    function fmt(n) {
+      if (n === null || n === undefined) return '—';
+      return new Intl.NumberFormat('de-DE').format(n);
+    }
+    function fmtDelta(n) {
+      if (n === null || n === undefined) return null;
+      const s = new Intl.NumberFormat('de-DE', { signDisplay: 'always' }).format(n);
+      return s;
+    }
+
+    // ── Platform Definitionen ──────────────────────────────────────────────
+    const PLATFORMS = [
+      {
+        key: 'twitch',
+        name: 'Twitch',
+        icon: 'fa-brands fa-twitch',
+        color: '#9146FF',
+        handle: 'thebitwitch',
+        rows: [
+          { label: 'Follower',            field: 'followers' },
+          { label: 'Subs',                field: 'subs_twitch' },
+          { label: 'Ø Zuschauer',          field: 'avg_viewers' },
+          { label: 'Watch Hours (30T)',   field: 'watch_hours_30d' },
+          { label: 'Twitch Top',         field: 'top_percent', suffix: '%' },
+        ]
+      },
+      {
+        key: 'instagram',
+        name: 'Instagram',
+        icon: 'fa-brands fa-instagram',
+        color: '#E1306C',
+        handle: 'thebitwitch',
+        rows: [
+          { label: 'Follower', field: 'followers' },
+        ]
+      },
+      {
+        key: 'tiktok',
+        name: 'TikTok',
+        icon: 'fa-brands fa-tiktok',
+        color: '#010101',
+        handle: 'thebitwitch',
+        rows: [
+          { label: 'Follower',           field: 'followers' },
+          { label: 'Likes gesamt',       field: 'likes' },
+          { label: 'Ø Views/Post (30T)',  field: 'avg_views_30d' },
+          { label: 'Impressionen (30T)', field: 'impressions_30d' },
+          { label: 'Engagement-Rate',    field: 'engagement_rate', suffix: '%' },
+        ]
+      },
+      {
+        key: 'youtube',
+        name: 'YouTube',
+        icon: 'fa-brands fa-youtube',
+        color: '#FF0000',
+        handle: 'the_bitwitch',
+        rows: [
+          { label: 'Abonnenten',           field: 'subscribers' },
+          { label: 'Impressionen (30T)',   field: 'impressions_30d' },
+          { label: 'Engagement-Rate',      field: 'engagement_rate', suffix: '%' },
+          { label: 'Ø Shorts-Views',       field: 'avg_shorts_views' },
+        ]
+      },
+    ];
+
+    // ── Stats laden und rendern ────────────────────────────────────────────
+    async function loadStats() {
+      let data = {};
+      try {
+        const res = await fetch('./stats.json', { cache: 'no-store' });
+        data = await res.json();
+      } catch (e) {
+        console.warn('stats.json nicht ladbar:', e);
+      }
+
+      // Gesamtreichweite berechnen
+      const followerFields = {
+        twitch: 'followers', youtube: 'subscribers',
+        instagram: 'followers', tiktok: 'followers'
+      };
+      let total = 0;
+      let hasAny = false;
+      for (const [plat, field] of Object.entries(followerFields)) {
+        const v = data[plat]?.[field];
+        if (typeof v === 'number') { total += v; hasAny = true; }
+      }
+      document.getElementById('reach-total').textContent = hasAny ? fmt(total) : '—';
+
+      // Platform-Karten rendern
+      const grid = document.getElementById('platform-grid');
+      grid.innerHTML = '';
+      for (const plat of PLATFORMS) {
+        const platData = data[plat.key] || {};
+        const card = document.createElement('div');
+        card.className = 'platform-card';
+        card.style.setProperty('--platform-color', plat.color);
+
+        let rowsHtml = '';
+        for (const row of plat.rows) {
+          const val = platData[row.field];
+          const isDelta = row.delta;
+          let displayVal, cls;
+          if (val === null || val === undefined) {
+            displayVal = '—'; cls = 'stat-value unknown';
+          } else if (isDelta) {
+            displayVal = fmtDelta(val); cls = val >= 0 ? 'stat-value positive' : 'stat-value';
+          } else if (row.suffix || !Number.isInteger(val)) {
+            displayVal = val.toLocaleString('de-DE') + (row.suffix || ''); cls = 'stat-value';
+          } else {
+            displayVal = fmt(val) + (row.suffix || ''); cls = 'stat-value';
+          }
+          rowsHtml += `
+            <div class="stat-row">
+              <span class="stat-label">${row.label}</span>
+              <span class="${cls}">${displayVal}</span>
+            </div>`;
+        }
+
+        card.innerHTML = `
+          <div class="platform-icon-wrap">
+            <i class="${plat.icon}"></i>
+          </div>
+          <div class="platform-name">${plat.name}</div>
+          <div class="platform-handle">@${plat.handle}</div>
+          ${rowsHtml}`;
+        grid.appendChild(card);
+      }
+
+      // Zeitstempel
+      const upd = document.getElementById('mk-updated');
+      if (data.updated) {
+        const d = new Date(data.updated);
+        upd.innerHTML = `Zuletzt aktualisiert: <span>${d.toLocaleString('de-DE', { dateStyle: 'medium', timeStyle: 'short' })}</span>`;
+      } else {
+        upd.textContent = 'Noch keine Daten – bitte crawl_stats.py ausführen.';
+      }
+    }
+
+    loadStats();
+  </script>
+</body>
+</html>

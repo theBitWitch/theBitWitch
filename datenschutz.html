@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datenschutz · theBitWitch</title>
+
+  <!-- Fonts (lokal) -->
+  <link rel="stylesheet" href="assets/fonts/google-fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .legal-page {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    .legal-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: var(--text-muted);
+      border: var(--pixel-size) solid var(--text-muted);
+      box-shadow: 2px 2px 0 var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin-bottom: 32px;
+      transition: color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+    }
+    .legal-back:hover {
+      color: var(--pink-dark);
+      border-color: var(--pink-dark);
+      box-shadow: 2px 2px 0 var(--pink-dark);
+      transform: translate(-1px, -1px);
+    }
+    .legal-heading {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: var(--text-main);
+      text-shadow: 2px 2px 0 var(--pink-medium);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .legal-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: var(--pixel-size) solid var(--text-main);
+      box-shadow: var(--pixel-size) var(--pixel-size) 0 var(--text-main);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      margin-bottom: 20px;
+    }
+    .legal-card h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--pink-dark);
+      margin-bottom: 14px;
+      line-height: 1.8;
+    }
+    .legal-card h3 {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--sage-dark);
+      margin: 16px 0 6px;
+    }
+    .legal-card p,
+    .legal-card li {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .legal-card ul {
+      padding-left: 20px;
+      margin-bottom: 8px;
+    }
+    .legal-card p:last-child { margin-bottom: 0; }
+    .legal-card a {
+      color: var(--pink-dark);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .placeholder-note {
+      font-size: 11px;
+      color: var(--sage-medium);
+      font-style: italic;
+      margin-top: 4px;
+    }
+    @media (min-width: 480px) {
+      .legal-heading { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="legal-page">
+
+    <a href="index.html" class="legal-back">← zurück</a>
+
+    <h1 class="legal-heading">Datenschutzerklärung ✨</h1>
+
+    <!-- 1. Verantwortlicher -->
+    <div class="legal-card">
+      <h2>1. Verantwortliche Person</h2>
+      <p>Verantwortlich für die Datenverarbeitung auf dieser Website im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p>
+      <p>
+        Leo Novak<br />
+        c/o Impressumservice Dein-Impressum<br />
+        Stettiner Straße 41<br />
+        35410 Hungen<br />
+        E-Mail: <a href="mailto:thebitwitch@gmail.com">thebitwitch@gmail.com</a>
+      </p>
+    </div>
+
+    <!-- 2. Hosting -->
+    <div class="legal-card">
+      <h2>2. Hosting</h2>
+      <p>Diese Website wird über <strong>GitHub Pages</strong> gehostet, einem Dienst der GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA.</p>
+      <p>Wenn du diese Website aufrufst, verarbeitet GitHub automatisch folgende Daten in Server-Logfiles:</p>
+      <ul>
+        <li>IP-Adresse (anonymisiert)</li>
+        <li>Datum und Uhrzeit des Zugriffs</li>
+        <li>Aufgerufene URL</li>
+        <li>Browser-Typ und -Version</li>
+        <li>Betriebssystem</li>
+        <li>Referrer-URL</li>
+      </ul>
+      <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren und stabilen Betrieb der Website). Die Daten werden nicht mit anderen Quellen zusammengeführt.</p>
+      <p>Weitere Informationen: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a></p>
+    </div>
+
+    <!-- 3. Externe Dienste / CDNs -->
+    <div class="legal-card">
+      <h2>3. Eingebundene externe Dienste</h2>
+      <p>Die einzige externe Verbindung, die beim Besuch dieser Website hergestellt wird, ist die zum Hosting-Anbieter <strong>GitHub Pages</strong> (GitHub, Inc., 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, USA / Microsoft Corporation). GitHub verarbeitet dabei serverseitig technische Zugriffsdaten wie IP-Adresse, Zeitpunkt des Zugriffs und aufgerufene Seite im Rahmen der Bereitstellung des Dienstes. Diese Verarbeitung erfolgt auf Basis von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Betrieb der Website). Es findet eine Datenübermittlung in die USA statt (Angemessenheitsbeschluss gemäß EU-US Data Privacy Framework).</p>
+      <p>Datenschutzerklärung GitHub: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement</a></p>
+    </div>
+
+    <!-- 4. Lokaler Speicher -->
+    <div class="legal-card">
+      <h2>4. Lokaler Speicher (localStorage)</h2>
+      <p>Diese Website speichert deine Farbschema-Präferenz (Light- oder Dark-Mode) lokal in deinem Browser über den sogenannten <strong>localStorage</strong>. Es wird ausschließlich der Schlüssel <code>theme</code> mit dem Wert <code>light</code> oder <code>dark</code> gespeichert.</p>
+      <p>Es werden dabei <strong>keine personenbezogenen Daten</strong> erhoben und diese Information wird <strong>nicht</strong> an einen Server übermittelt. Der localStorage-Eintrag verbleibt lokal auf deinem Gerät und kann jederzeit über die Browser-Einstellungen gelöscht werden.</p>
+      <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer nutzerfreundlichen Darstellung).</p>
+    </div>
+
+    <!-- 5. Keine Cookies / Tracking -->
+    <div class="legal-card">
+      <h2>5. Cookies & Tracking</h2>
+      <p>Diese Website setzt <strong>keine Cookies</strong> und verwendet <strong>kein Tracking</strong>, keine Analyse-Tools (z. B. Google Analytics) und kein Remarketing.</p>
+    </div>
+
+    <!-- 6. Deine Rechte -->
+    <div class="legal-card">
+      <h2>6. Deine Rechte als betroffene Person</h2>
+      <p>Gemäß DSGVO hast du folgende Rechte gegenüber mir als Verantwortlicher:</p>
+      <ul>
+        <li><strong>Auskunft</strong> (Art. 15 DSGVO): Du kannst Auskunft über deine verarbeiteten personenbezogenen Daten verlangen.</li>
+        <li><strong>Berichtigung</strong> (Art. 16 DSGVO): Du kannst die Berichtigung unrichtiger Daten verlangen.</li>
+        <li><strong>Löschung</strong> (Art. 17 DSGVO): Du kannst unter bestimmten Voraussetzungen die Löschung deiner Daten verlangen.</li>
+        <li><strong>Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO): Du kannst die Einschränkung der Verarbeitung deiner Daten verlangen.</li>
+        <li><strong>Widerspruch</strong> (Art. 21 DSGVO): Du kannst der Verarbeitung deiner Daten widersprechen, sofern sie auf berechtigtem Interesse beruht.</li>
+        <li><strong>Datenübertragbarkeit</strong> (Art. 20 DSGVO): Du kannst verlangen, deine Daten in einem strukturierten, gängigen Format zu erhalten.</li>
+      </ul>
+      <p>Zur Geltendmachung dieser Rechte wende dich bitte per E-Mail an: <a href="mailto:thebitwitch@gmail.com">thebitwitch@gmail.com</a></p>
+      <p>Außerdem hast du das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren. Die zuständige Behörde richtet sich nach deinem Bundesland.</p>
+    </div>
+
+    <!-- 7. Aktualität -->
+    <div class="legal-card">
+      <h2>7. Aktualität dieser Erklärung</h2>
+      <p>Diese Datenschutzerklärung ist aktuell gültig und hat den Stand Mai 2026. Durch die Weiterentwicklung dieser Website kann eine Anpassung notwendig werden.</p>
+    </div>
+
+    <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:8px;">
+      <a href="index.html" style="color:var(--pink-dark);">← zurück zur Startseite</a>
+    </p>
+
+  </main>
+
+  <script>
+    // Darkmode-Präferenz aus localStorage wiederherstellen
+    (function () {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</body>
+</html>
