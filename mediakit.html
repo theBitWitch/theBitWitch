@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Media Kit · theBitWitch</title>
   <meta name="robots" content="noindex" />
+  <link rel="icon" href="assets/leo.png" type="image/png" />
   <!-- Fonts (lokal) -->
   <link rel="stylesheet" href="assets/fonts/google-fonts.css" />
 
@@ -109,6 +110,10 @@
       gap: 1rem;
     }
 
+    @media (max-width: 540px) {
+      .platform-grid { grid-template-columns: 1fr; }
+    }
+
     .platform-card {
       background: var(--card-bg);
       backdrop-filter: blur(8px);
@@ -149,6 +154,15 @@
       font-size: .8rem;
       color: var(--text-muted);
       font-weight: 600;
+    }
+
+    .platform-note {
+      font-size: .7rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: .5rem;
+      opacity: .7;
+      line-height: 1.5;
     }
 
     .stat-row {
@@ -533,6 +547,7 @@
         icon: 'fa-brands fa-instagram',
         color: '#E1306C',
         handle: 'thebitwitch',
+        note: 'Weitere Metriken nicht verfügbar – Instagram blockiert automatisierte Abfragen.',
         rows: [
           { label: 'Follower', field: 'followers' },
         ]
@@ -625,7 +640,8 @@
           </div>
           <div class="platform-name">${plat.name}</div>
           <div class="platform-handle">@${plat.handle}</div>
-          ${rowsHtml}`;
+          ${rowsHtml}
+          ${plat.note ? `<p class="platform-note">${plat.note}</p>` : ''}`;  
         grid.appendChild(card);
       }
 
