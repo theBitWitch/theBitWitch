@@ -493,7 +493,12 @@ def main():
     with sync_playwright() as pw:
         browser = pw.chromium.launch(
             headless=HEADLESS,
-            args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-blink-features=AutomationControlled",
+            ],
         )
         context = browser.new_context(
             user_agent=USER_AGENT,
@@ -538,6 +543,14 @@ def main():
         plat: {k: v for k, v in pdata.items() if v is not None}
         for plat, pdata in results.items()
     }
+
+    # Schutz: nicht schreiben wenn kaum Daten vorhanden (Scraper-Fehler in CI)
+    total_values = sum(len(d) for d in cleaned.values())
+    if total_values < 3:
+        print(f"\n⚠️  Nur {total_values} Werte gesammelt – stats.json wird NICHT überschrieben.")
+        print("   Crawler-Fehler in CI? Prüfe die Action-Logs.")
+        return
+
     output = {
         "updated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         **cleaned,

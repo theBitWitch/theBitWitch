@@ -1,9 +1,9 @@
 {
-  "updated": "2026-05-26T22:21:50+00:00",
+  "updated": "2026-05-27T09:56:32+00:00",
   "twitch": {
     "followers": 962,
     "avg_viewers": 49.2,
-    "top_percent": 0.76,
+    "top_percent": 0.75,
     "subs_twitch": 127,
     "avg_stream_views": 841,
     "avg_concurrent_30d": 91.5,
@@ -19,12 +19,12 @@
     "url": "https://youtube.com/@the_bitwitch"
   },
   "instagram": {
-    "followers": 4529,
+    "followers": 4532,
     "url": "https://instagram.com/thebitwitch"
   },
   "tiktok": {
-    "followers": 3480,
-    "likes": 49400,
+    "followers": 3490,
+    "likes": 49500,
     "impressions_30d": 46500,
     "engagements_30d": 4100,
     "avg_views_30d": 1700,
