@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-27T09:56:32+00:00",
+  "updated": "2026-05-27T10:05:37+00:00",
   "twitch": {
     "followers": 962,
     "avg_viewers": 49.2,
@@ -11,6 +11,11 @@
     "url": "https://twitch.tv/thebitwitch"
   },
   "youtube": {
+    "subscribers": 288,
+    "impressions_30d": 37200,
+    "engagements_30d": 284,
+    "avg_shorts_views": 500,
+    "engagement_rate": 1.2,
     "url": "https://youtube.com/@the_bitwitch"
   },
   "instagram": {
