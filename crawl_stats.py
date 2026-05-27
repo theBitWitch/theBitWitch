@@ -544,10 +544,30 @@ def main():
         for plat, pdata in results.items()
     }
 
-    # Schutz: nicht schreiben wenn kaum Daten vorhanden (Scraper-Fehler in CI)
+    # Schutz: nicht schreiben wenn zu wenige Daten (Scraper-Fehler in CI)
     total_values = sum(len(d) for d in cleaned.values())
-    if total_values < 3:
-        print(f"\n⚠️  Nur {total_values} Werte gesammelt – stats.json wird NICHT überschrieben.")
+    # Mindestens 10 Werte (URL-Felder nicht mitzählen)
+    real_values = sum(
+        sum(1 for k in d if k != "url")
+        for d in cleaned.values()
+    )
+
+    # Bestehende stats.json lesen um zu vergleichen
+    existing_real = 0
+    if OUTPUT.exists():
+        try:
+            with open(OUTPUT, encoding="utf-8") as f:
+                existing = json.load(f)
+            existing_real = sum(
+                sum(1 for k in v if k not in ("url", "updated"))
+                for v in existing.values()
+                if isinstance(v, dict)
+            )
+        except Exception:
+            pass
+
+    if real_values < 8 or real_values < existing_real - 2:
+        print(f"\n⚠️  Nur {real_values} Datenwerte gesammelt (vorher: {existing_real}) – stats.json wird NICHT überschrieben.")
         print("   Crawler-Fehler in CI? Prüfe die Action-Logs.")
         return
 
