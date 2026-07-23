@@ -290,7 +290,7 @@ def scrape_beacons_platform(page, handle: str, platform: str) -> dict:
         result["subs_twitch"]        = find_num_after(text, "SUBSCRIBERS", min_val=1, max_val=100_000)
         result["avg_stream_views"]   = find_num_after(text, "AVG STREAM VIEWS", min_val=1)
         result["avg_concurrent_30d"] = find_float_after(text, "AVG CONCURRENT VIEWERS")
-        result["watch_hours_30d"]    = find_num_after(text, "WATCH HOURS", min_val=50)
+        result["watch_hours_30d"]    = find_num_after(text, "WATCH HOURS", min_val=50, year_filter=False)
 
     elif platform == "tiktok":
         result["impressions_30d"]  = find_num_after(text, "TOTAL IMPRESSIONS", min_val=100)

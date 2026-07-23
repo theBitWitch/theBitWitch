@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-23T21:26:39+00:00",
+  "updated": "2026-07-23T21:34:24+00:00",
   "twitch": {
     "followers": 1209,
     "avg_viewers": 54.8,
@@ -7,6 +7,7 @@
     "subs_twitch": 108,
     "avg_stream_views": 698,
     "avg_concurrent_30d": 72.6,
+    "watch_hours_30d": 1900,
     "url": "https://twitch.tv/thebitwitch"
   },
   "youtube": {
