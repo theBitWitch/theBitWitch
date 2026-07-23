@@ -96,11 +96,11 @@ def parse_num(s: str) -> int | None:
     return int(n * multipliers.get(suffix, 1))
 
 
-def find_num_after(text: str, *keywords, window: int = 300, min_val: int = 1, max_val: int = 100_000_000) -> int | None:
+def find_num_after(text: str, *keywords, window: int = 300, min_val: int = 1, max_val: int = 100_000_000, year_filter: bool = True) -> int | None:
     """
     Sucht die erste Zahl im Text innerhalb von `window` Zeichen
     nach einem der angegebenen Keywords (case-insensitive).
-    Ignoriert Jahres-ähnliche Werte (1900-2100) wenn min_val > 2100.
+    Ignoriert Jahres-ähnliche Werte (1900-2100) wenn year_filter=True.
     """
     text_lower = text.lower()
     for kw in keywords:
@@ -114,7 +114,7 @@ def find_num_after(text: str, *keywords, window: int = 300, min_val: int = 1, ma
             if result is None:
                 continue
             # Jahresfilter: 1900–2100 sind fast immer Jahreszahlen, keine Follower
-            if 1900 <= result <= 2100:
+            if year_filter and 1900 <= result <= 2100:
                 continue
             if min_val <= result <= max_val:
                 return result
@@ -272,7 +272,10 @@ def scrape_beacons_platform(page, handle: str, platform: str) -> dict:
     Scrapt beacons.ai/mediakit für eine Plattform (twitch/tiktok/youtube).
     Die Seite ist server-side gerendert, daher kein JS-Execution nötig.
     """
-    url = f"https://beacons.ai/{handle}/mediakit?platform={platform}"
+    if platform == "tiktok":
+        url = f"https://beacons.ai/{handle}/mediakit"
+    else:
+        url = f"https://beacons.ai/{handle}/mediakit?platform={platform}"
     print(f"  ↳ (Beacons/{platform}) {url}")
     result = {}
     try:
@@ -292,9 +295,10 @@ def scrape_beacons_platform(page, handle: str, platform: str) -> dict:
     elif platform == "tiktok":
         result["impressions_30d"]  = find_num_after(text, "TOTAL IMPRESSIONS", min_val=100)
         result["engagements_30d"]  = find_num_after(text, "TOTAL ENGAGEMENTS", min_val=1)
-        result["avg_views_30d"]    = find_num_after(text, "AVG VIEWS", min_val=1)
+        result["avg_views_30d"]    = find_num_after(text, "AVG VIEWS", min_val=300, window=300, year_filter=False)
         result["avg_likes_30d"]    = find_num_after(text, "AVG LIKES", min_val=1)
         result["engagement_rate"]  = find_float_after(text, "ENGAGEMENT\n", "ENGAGEMENT ")
+
 
     elif platform == "youtube":
         result["impressions_30d"]    = find_num_after(text, "TOTAL IMPRESSIONS", min_val=100)
