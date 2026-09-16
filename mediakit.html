@@ -547,13 +547,12 @@
         color: '#E1306C',
         handle: 'thebitwitch',
         note: d => d.posts_counted
-          ? `Views & Engagement basieren auf den letzten ${d.posts_counted} Posts.`
+          ? `Engagement basiert auf den letzten ${d.posts_counted} Posts.`
           : 'Weitere Metriken derzeit nicht verfügbar.',
         rows: [
           { label: 'Follower',           field: 'followers' },
-          { label: 'Ø Views',            field: 'avg_views_recent' },
-          { label: 'Impressionen',       field: 'impressions_recent' },
           { label: 'Ø Likes',            field: 'avg_likes_recent' },
+          { label: 'Ø Kommentare',       field: 'avg_comments_recent' },
           { label: 'Engagement-Rate',    field: 'engagement_rate', suffix: '%' },
         ]
       },
