@@ -546,9 +546,15 @@
         icon: 'fa-brands fa-instagram',
         color: '#E1306C',
         handle: 'thebitwitch',
-        note: 'Weitere Metriken nicht verfügbar – Instagram blockiert automatisierte Abfragen.',
+        note: d => d.posts_counted
+          ? `Views & Engagement basieren auf den letzten ${d.posts_counted} Posts.`
+          : 'Weitere Metriken derzeit nicht verfügbar.',
         rows: [
-          { label: 'Follower', field: 'followers' },
+          { label: 'Follower',           field: 'followers' },
+          { label: 'Ø Views',            field: 'avg_views_recent' },
+          { label: 'Impressionen',       field: 'impressions_recent' },
+          { label: 'Ø Likes',            field: 'avg_likes_recent' },
+          { label: 'Engagement-Rate',    field: 'engagement_rate', suffix: '%' },
         ]
       },
       {
@@ -633,6 +639,8 @@
             </div>`;
         }
 
+        const noteText = typeof plat.note === 'function' ? plat.note(platData) : plat.note;
+
         card.innerHTML = `
           <div class="platform-icon-wrap">
             <i class="${plat.icon}"></i>
@@ -640,7 +648,7 @@
           <div class="platform-name">${plat.name}</div>
           <div class="platform-handle">@${plat.handle}</div>
           ${rowsHtml}
-          ${plat.note ? `<p class="platform-note">${plat.note}</p>` : ''}`;  
+          ${noteText ? `<p class="platform-note">${noteText}</p>` : ''}`;
         grid.appendChild(card);
       }
 
