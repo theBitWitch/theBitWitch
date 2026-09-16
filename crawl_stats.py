@@ -26,8 +26,15 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
+
+# Windows-Konsolen nutzen oft cp1252 statt UTF-8 → die ✓/↳/⚠-Symbole
+# unten würden mit UnicodeEncodeError abstürzen. Auf UTF-8 umschalten.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
 
 try:
     from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
@@ -57,8 +64,6 @@ SOCIALBLADE_URLS = {
     "instagram": "https://socialblade.com/instagram/user/{handle}",
     "tiktok":    "https://socialblade.com/tiktok/user/{handle}",
 }
-# Fallback-URLs für YouTube falls /user/ nicht existiert
-SOCIALBLADE_YT_FALLBACKS = []
 
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -121,38 +126,6 @@ def find_num_after(text: str, *keywords, window: int = 300, min_val: int = 1, ma
     return None
 
 
-def extract_30d_sum(text: str, section_keyword: str) -> int | None:
-    """
-    Versucht, die Summe der 30-Tage-Tabelle von Social Blade zu lesen.
-    Social Blade zeigt am Tabellenende oft eine "30 Day Total"-Zeile.
-    """
-    # Suche nach "30 Day Total" oder "Monthly" Zusammenfassung
-    total = find_num_after(
-        text,
-        "30 day total", "monthly total", "monatlich gesamt",
-        window=200
-    )
-    if total is not None:
-        return total
-    # Fallback: Alle positiven Tageszahlen in der Nähe von section_keyword summieren
-    idx = text.lower().find(section_keyword.lower())
-    if idx == -1:
-        return None
-    block = text[idx : idx + 8000]
-    # Finde alle Zahlen in der Tabelle (positive und negative Tageswerte)
-    nums = re.findall(r'([+-]?[\d,\.]+)\s*[KkMmBb]?', block[:4000])
-    daily = []
-    for n in nums[:60]:  # Max 60 Einträge (2 Monate Puffer)
-        try:
-            v = int(float(n.replace(',', '').replace('+', '')))
-            if -1_000_000 < v < 1_000_000:
-                daily.append(v)
-        except ValueError:
-            pass
-    if len(daily) >= 28:
-        return sum(daily[:30])
-    return None
-
 # ── Scraper-Funktionen ────────────────────────────────────────────────────────
 
 def find_float_after(text: str, *keywords, window: int = 120) -> float | None:
@@ -172,6 +145,24 @@ def find_float_after(text: str, *keywords, window: int = 120) -> float | None:
     return None
 
 
+def _is_blocked_page(text: str) -> bool:
+    """
+    Erkennt Cloudflare-Challenges & Block-Seiten anhand ihres Textes.
+    Ohne diese Prüfung würde einfach ergebnislos nach Zahlen in der
+    Challenge-Seite gesucht – der Grund für das Fehlen der Daten bliebe
+    dann in den Logs unsichtbar.
+    """
+    t = text[:1000].lower()
+    return any(marker in t for marker in (
+        "sicherheitsüberprüfung wird durchgeführt",
+        "checking your browser",
+        "checking if the site connection is secure",
+        "you have been blocked",
+        "attention required! | cloudflare",
+        "just a moment",
+    ))
+
+
 def _load_socialblade(page, url: str) -> str | None:
     """Lädt eine Social Blade Seite und gibt den Body-Text zurück, oder None bei Fehler."""
     try:
@@ -180,6 +171,9 @@ def _load_socialblade(page, url: str) -> str | None:
         text = page.inner_text("body")
         # Social Blade zeigt "404" oder "not found" wenn der Kanal nicht existiert
         if "not found" in text.lower() or "404" in text[:500]:
+            return None
+        if _is_blocked_page(text):
+            print("  ⚠ Von Cloudflare blockiert (Challenge-Seite)")
             return None
         return text
     except PWTimeout:
@@ -194,18 +188,9 @@ def scrape_platform(page, platform: str, handle: str) -> dict:
     Gibt ein Dict mit verfügbaren Kennzahlen zurück; nicht verfügbare = None.
     """
     stats = {}
-    urls_to_try = [SOCIALBLADE_URLS[platform].format(handle=handle)]
-
-    # YouTube: mehrere URL-Varianten versuchen
-    if platform == "youtube":
-        urls_to_try += [u.format(handle=handle) for u in SOCIALBLADE_YT_FALLBACKS]
-
-    text = None
-    for url in urls_to_try:
-        print(f"  ↳ {url}")
-        text = _load_socialblade(page, url)
-        if text:
-            break
+    url = SOCIALBLADE_URLS[platform].format(handle=handle)
+    print(f"  ↳ {url}")
+    text = _load_socialblade(page, url)
 
     if not text:
         print(f"  ⚠ Keine Social Blade Daten für {platform}")
@@ -248,6 +233,10 @@ def scrape_twitchtracker(page, handle: str) -> dict:
         print(f"  \u26a0 TwitchTracker nicht erreichbar: {e}")
         return result
 
+    if _is_blocked_page(text):
+        print("  \u26a0 TwitchTracker: von Cloudflare blockiert (Challenge-Seite)")
+        return result
+
     # Avg viewers: "Avg viewers \u25cf 49.2"
     m = re.search(r'Avg\s*viewers?\s*[\u25cf:\-]?\s*([\d]+(?:[.,]\d+)?)', text, re.IGNORECASE)
     if m:
@@ -286,6 +275,10 @@ def scrape_beacons_platform(page, handle: str, platform: str) -> dict:
         print(f"  ⚠ Beacons/{platform} nicht erreichbar: {e}")
         return result
 
+    if _is_blocked_page(text):
+        print(f"  ⚠ Beacons/{platform}: von Cloudflare blockiert (Challenge-Seite)")
+        return result
+
     if platform == "twitch":
         result["subs_twitch"]        = find_num_after(text, "SUBSCRIBERS", min_val=1, max_val=100_000)
         result["avg_stream_views"]   = find_num_after(text, "AVG STREAM VIEWS", min_val=1)
@@ -310,173 +303,42 @@ def scrape_beacons_platform(page, handle: str, platform: str) -> dict:
     return {k: v for k, v in result.items() if v not in (None, 0)}
 
 
-def scrape_youtube_videos_30d(page, handle: str) -> int | None:
+def with_fresh_page(browser, fn, *args, retries: int = 1, retry_delay: int = 8, **kwargs):
     """
-    Fallback: Scrapt den YouTube-Kanal-Videos-Tab und summiert Views
-    von Videos der letzten 30 Tage.
-    Gibt None zurück wenn nicht möglich.
+    Führt fn(page, *args, **kwargs) in einem brandneuen Browser-Context aus
+    (frische Cookies/Session) und schließt ihn danach wieder.
+
+    Wichtig, weil Cloudflare (Social Blade, Beacons.ai) eine wiederverwendete
+    Session nach der ersten Anfrage als Bot markiert und jede weitere Anfrage
+    in dieser Session mit einer Challenge-Seite blockiert – auch wenn die
+    Anfragen an unterschiedliche Domains gehen. Mit einem frischen Context
+    pro Anfrage sieht jede Anfrage wie ein neuer Besucher aus.
+
+    Liefert fn ein leeres Ergebnis (z.B. weil eine Challenge-Seite nur kurz
+    aktiv war), wird es nach `retry_delay` Sekunden bis zu `retries`-mal mit
+    einem erneut frischen Context wiederholt.
     """
-    url = f"https://www.youtube.com/@{handle}/videos"
-    print(f"  ↳ (YouTube-Videos-Fallback) {url}")
-    try:
-        page.goto(url, timeout=TIMEOUT, wait_until="domcontentloaded")
-        # Warten bis Videos geladen
-        page.wait_for_selector("ytd-rich-item-renderer", timeout=15_000)
-        page.wait_for_timeout(2_000)
-    except Exception as e:
-        print(f"  ⚠ YouTube-Videos nicht ladbar: {e}")
-        return None
-
-    # Video-Metadaten aus der Seite lesen
-    text = page.inner_text("body")
-    cutoff = datetime.now(timezone.utc)
-
-    total_views = 0
-    found = 0
-
-    # Suche nach Mustern wie "vor 3 Wochen", "vor 2 Tagen", "vor 1 Monat"
-    # und dazugehörigen Viewzahlen
-    # YouTube zeigt: "1.234 Aufrufe", "vor 2 Wochen"
-    patterns_age = [
-        (r'vor\s+(\d+)\s+Stunde[n]?',  'hours'),
-        (r'vor\s+(\d+)\s+Tag[e]?[n]?', 'days'),
-        (r'vor\s+(\d+)\s+Woche[n]?',   'weeks'),
-        (r'vor\s+(\d+)\s+Monat[e]?[n]?', 'months'),
-        # Englisch (je nach User-Agent / Region)
-        (r'(\d+)\s+hour[s]?\s+ago',    'hours'),
-        (r'(\d+)\s+day[s]?\s+ago',     'days'),
-        (r'(\d+)\s+week[s]?\s+ago',    'weeks'),
-        (r'(\d+)\s+month[s]?\s+ago',   'months'),
-    ]
-
-    # Finde alle "(Zahl) Aufrufe" und "(Zeitangabe)" Paare
-    view_matches = list(re.finditer(
-        r'([\d][0-9,\.]*\s*[KkMmBb]?)\s*(?:Aufrufe|views?)',
-        text, re.IGNORECASE
-    ))
-
-    for vm in view_matches:
-        # Suche im Umfeld (1000 Zeichen) nach Zeitangabe
-        start = max(0, vm.start() - 500)
-        end   = min(len(text), vm.end() + 500)
-        context = text[start:end]
-
-        days_ago = None
-        for pat, unit in patterns_age:
-            m = re.search(pat, context, re.IGNORECASE)
-            if m:
-                n = int(m.group(1))
-                if unit == 'hours':  days_ago = max(1, n // 24)
-                elif unit == 'days': days_ago = n
-                elif unit == 'weeks': days_ago = n * 7
-                elif unit == 'months': days_ago = n * 30
-                break
-
-        if days_ago is not None and days_ago <= 30:
-            v = parse_num(vm.group(1))
-            if v and v > 0:
-                total_views += v
-                found += 1
-
-    if found > 0:
-        print(f"  ✓ YouTube: {found} Video(s) der letzten 30 Tage gefunden, {total_views:,} Views")
-        return total_views
-    return None
-
-# ── Direkte Plattform-Scraper für Post-Views ─────────────────────────────────
-
-def scrape_tiktok_views_30d(page, handle: str) -> int | None:
-    """
-    Scrapt das TikTok-Profil und summiert Views aller Posts der letzten 30 Tage.
-    Interceptiert die interne API-Antwort, die TikTok nach dem Seitenload nachlädt.
-    """
-    url = f"https://www.tiktok.com/@{handle}"
-    print(f"  ↳ (TikTok-Posts) {url}")
-
-    captured = []
-
-    def on_response(response):
-        if any(kw in response.url for kw in ['item_list', 'aweme/v1', 'post/item', 'api/post']):
-            try:
-                data = response.json()
-                if data:
-                    captured.append(data)
-            except Exception:
-                pass
-
-    page.on('response', on_response)
-    try:
-        page.goto(url, timeout=TIMEOUT, wait_until="domcontentloaded")
-        page.wait_for_timeout(4000)
-        page.evaluate("window.scrollBy(0, 1200)")
-        page.wait_for_timeout(3000)
-    except Exception as e:
-        print(f"  ⚠ TikTok nicht erreichbar: {e}")
-        page.remove_listener('response', on_response)
-        return None
-
-    page.remove_listener('response', on_response)
-
-    # Videos aus abgefangenen API-Antworten extrahieren
-    videos = []
-    for data in captured:
-        items = data.get('itemList') or data.get('aweme_list') or []
-        for v in items:
-            if isinstance(v, dict) and 'createTime' in v:
-                videos.append(v)
-
-    if not videos:
-        # DOM-Fallback: sichtbare View-Counts ohne Datumsfilter
-        print("  ⚠ TikTok: API nicht interceptiert – DOM-Fallback")
+    result = None
+    for attempt in range(retries + 1):
+        context = browser.new_context(
+            user_agent=USER_AGENT,
+            viewport={"width": 1280, "height": 900},
+            locale="de-DE",
+        )
+        context.add_init_script(
+            "Object.defineProperty(navigator,'webdriver',{get:()=>undefined})"
+        )
+        page = context.new_page()
         try:
-            page.wait_for_selector('[data-e2e="user-post-item"]', timeout=8000)
-            total = 0
-            for item in page.locator('[data-e2e="user-post-item"]').all():
-                try:
-                    txt = item.inner_text()
-                    m = re.search(r'([\d][0-9,\.]*\s*[KkMm]?)', txt)
-                    if m:
-                        v = parse_num(m.group(1))
-                        if v and 100 < v < 100_000_000:
-                            total += v
-                except Exception:
-                    pass
-            if total > 0:
-                print(f"  ~ TikTok: DOM-Fallback (kein Datumsfilter) → {total:,} Views")
-                return total
-        except Exception:
-            pass
-        print("  – TikTok: Keine Views ermittelbar")
-        return None
-
-    cutoff = datetime.now(timezone.utc).timestamp() - 30 * 86400
-    total, count = 0, 0
-    for video in videos:
-        try:
-            create_time = int(video.get('createTime', 0))
-        except (ValueError, TypeError):
-            continue
-        if create_time < cutoff:
-            continue
-        stats = video.get('stats', video)
-        play_count = stats.get('playCount', 0) or 0
-        total += play_count
-        count += 1
-
-    if count > 0:
-        print(f"  ✓ TikTok: {count} Post(s) ≤30 Tage → {total:,} Views")
-        return total
-    print("  – TikTok: Keine Posts der letzten 30 Tage gefunden")
-    return None
-
-
-def scrape_instagram_views_30d(page, handle: str) -> int | None:
-    """
-    Instagram sperrt ohne Login alle Post-Daten für Bots.
-    Diese Funktion versucht es trotzdem, gibt aber None zurück wenn nötig.
-    """
-    print("  ⚠ Instagram: Post-Views ohne Login nicht abrufbar (Instagram blockiert Bots)")
-    return None
+            result = fn(page, *args, **kwargs)
+        finally:
+            context.close()
+        if result:
+            return result
+        if attempt < retries:
+            print(f"     … leeres Ergebnis, neuer Versuch in {retry_delay}s")
+            time.sleep(retry_delay)
+    return result
 
 
 # ── Hauptprogramm ─────────────────────────────────────────────────────────────
@@ -504,30 +366,19 @@ def main():
                 "--disable-blink-features=AutomationControlled",
             ],
         )
-        context = browser.new_context(
-            user_agent=USER_AGENT,
-            viewport={"width": 1280, "height": 900},
-            locale="de-DE",
-        )
-        # Automatisierungs-Fingerprint verbergen
-        context.add_init_script(
-            "Object.defineProperty(navigator,'webdriver',{get:()=>undefined})"
-        )
-        page = context.new_page()
-
         for platform in ["twitch", "youtube", "instagram", "tiktok"]:
             handle = HANDLES[platform]
             print(f"\n[{platform.upper()}] @{handle}")
-            stats = scrape_platform(page, platform, handle)
+            stats = with_fresh_page(browser, scrape_platform, platform, handle)
 
             if platform == "twitch":
-                tt = scrape_twitchtracker(page, HANDLES["twitch"])
+                tt = with_fresh_page(browser, scrape_twitchtracker, HANDLES["twitch"])
                 stats.update(tt)
-                beacons = scrape_beacons_platform(page, HANDLES["twitch"], "twitch")
+                beacons = with_fresh_page(browser, scrape_beacons_platform, HANDLES["twitch"], "twitch")
                 stats.update(beacons)
 
             if platform in ("tiktok", "youtube"):
-                beacons = scrape_beacons_platform(page, HANDLES["twitch"], platform)
+                beacons = with_fresh_page(browser, scrape_beacons_platform, HANDLES["twitch"], platform)
                 stats.update(beacons)
 
             stats["url"] = urls[platform]
@@ -549,7 +400,6 @@ def main():
     }
 
     # Schutz: nicht schreiben wenn zu wenige Daten (Scraper-Fehler in CI)
-    total_values = sum(len(d) for d in cleaned.values())
     # Mindestens 10 Werte (URL-Felder nicht mitzählen)
     real_values = sum(
         sum(1 for k in d if k != "url")

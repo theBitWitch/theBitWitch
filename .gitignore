@@ -1,1 +1,3 @@
 push-lost.ps1
+crawl_stats.py
+__pycache__/
