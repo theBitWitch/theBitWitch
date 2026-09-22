@@ -1,35 +1,35 @@
 {
-  "updated": "2026-09-16T18:43:08+00:00",
+  "updated": "2026-09-22T15:43:20+00:00",
   "twitch": {
-    "followers": 1407,
-    "avg_viewers": 60.4,
+    "followers": 1427,
+    "avg_viewers": 61.2,
     "top_percent": 0.72,
-    "subs_twitch": 209,
-    "avg_stream_views": 610,
-    "avg_concurrent_30d": 80.8,
-    "watch_hours_30d": 2000,
+    "subs_twitch": 122,
+    "avg_stream_views": 625,
+    "avg_concurrent_30d": 82.0,
+    "watch_hours_30d": 2100,
     "url": "https://twitch.tv/thebitwitch"
   },
   "youtube": {
-    "subscribers": 415,
-    "impressions_30d": 12900,
-    "engagements_30d": 180,
-    "avg_shorts_views": 466,
-    "engagement_rate": 1.4,
+    "subscribers": 441,
+    "impressions_30d": 15200,
+    "engagements_30d": 243,
+    "avg_shorts_views": 509,
+    "engagement_rate": 1.7,
     "url": "https://youtube.com/@the_bitwitch"
   },
   "instagram": {
-    "followers": 5777,
+    "followers": 6472,
     "url": "https://instagram.com/thebitwitch"
   },
   "tiktok": {
-    "followers": 4230,
-    "likes": 68900,
-    "impressions_30d": 74300,
-    "engagements_30d": 4400,
-    "avg_views_30d": 4600,
-    "avg_likes_30d": 233,
-    "engagement_rate": 7.6,
+    "followers": 4470,
+    "likes": 71900,
+    "impressions_30d": 167600,
+    "engagements_30d": 10400,
+    "avg_views_30d": 9900,
+    "avg_likes_30d": 545,
+    "engagement_rate": 7.2,
     "url": "https://tiktok.com/@thebitwitch"
   }
 }
